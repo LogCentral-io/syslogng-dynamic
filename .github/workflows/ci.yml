@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        # Add any Python dependencies here if needed
+        
+    - name: Lint Python code
+      run: |
+        pip install flake8
+        flake8 send_syslog.py --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 send_syslog.py --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        
+    - name: Test syslog-ng configuration syntax
+      run: |
+        docker run --rm -v $(pwd)/syslog-ng:/etc/syslog-ng:ro \
+          balabit/syslog-ng:latest \
+          syslog-ng --syntax-only -f /etc/syslog-ng/syslog-ng.conf
+          
+    - name: Build Docker image
+      run: |
+        docker build -t syslogng-dynamic:test ./syslogng-reloader
+        
+    - name: Test Docker Compose
+      run: |
+        docker compose config
+        
+    - name: Run basic container test
+      run: |
+        docker run --rm -d --name test-syslogng \
+          -v $(pwd)/syslog-ng:/etc/syslog-ng:ro \
+          -v $(pwd)/logs:/var/log/syslog-ng-logs \
+          syslogng-dynamic:test
+        sleep 10
+        docker logs test-syslogng
+        docker stop test-syslogng || true
+        
+  security:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'

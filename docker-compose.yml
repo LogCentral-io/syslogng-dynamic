@@ -1,0 +1,28 @@
+name: syslogng-dynamic
+
+services:
+  syslog-ng:
+    build:
+      context: ./syslogng-reloader
+    container_name: syslogng
+    environment:
+      - CONF_DIR=/etc/syslog-ng
+      - CONF_FILE=/etc/syslog-ng/syslog-ng.conf
+      - CONTROL_SOCK=/run/syslog-ng.ctl
+      - DEBOUNCE_MS=500
+    volumes:
+      - ./syslog-ng:/etc/syslog-ng:ro
+      - ./logs:/var/log/syslog-ng-logs
+      - syslog-state:/var/lib/syslog-ng
+    # Host networking: syslog-ng binds directly on the host’s IPs/ports
+    network_mode: "host"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "syslog-ng-ctl --control=/run/syslog-ng.ctl query get version >/dev/null 2>&1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  syslog-state:
