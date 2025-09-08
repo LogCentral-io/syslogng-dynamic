@@ -1,32 +1,32 @@
-# Syslog-ng Dynamic Configuration
+# 🔄 Syslog-ng Dynamic Configuration
 
 A Docker-based syslog-ng server with dynamic configuration reloading capabilities. This project provides a robust, containerized syslog collection system that automatically reloads configuration changes without service interruption.
 
-## Features
+## ✨ Features
 
-- **Dynamic Configuration Reloading**: Automatically detects and reloads configuration changes using inotify and polling fallback
-- **Docker-based Deployment**: Easy deployment using Docker Compose with host networking support
-- **Multi-site Support**: Modular configuration structure supporting multiple sites/locations
-- **Health Monitoring**: Built-in health checks and monitoring capabilities
-- **Cross-platform Compatibility**: Works on Linux, macOS, and Windows with Docker
+- **🔄 Dynamic Configuration Reloading**: Automatically detects and reloads configuration changes using inotify and polling fallback
+- **🐳 Docker-based Deployment**: Easy deployment using Docker Compose with host networking support
+- **🏢 Multi-site Support**: Modular configuration structure supporting multiple sites/locations
+- **💚 Health Monitoring**: Built-in health checks and monitoring capabilities
+- **🌐 Cross-platform Compatibility**: Works on Linux, macOS, and Windows with Docker
 
-## Architecture
+## 🏗️ Architecture
 
 The system consists of:
 
-- **syslog-ng**: The main log collection service with dynamic reloading
-- **Configuration Structure**: Modular configuration files organized by options and locations
-- **Reloader Script**: Intelligent configuration monitoring with debouncing and fallback mechanisms
-- **Testing Utilities**: Python script for generating test syslog messages
+- **📊 syslog-ng**: The main log collection service with dynamic reloading
+- **📁 Configuration Structure**: Modular configuration files organized by options and locations
+- **⚡ Reloader Script**: Intelligent configuration monitoring with debouncing and fallback mechanisms
+- **🧪 Testing Utilities**: Python script for generating test syslog messages
 
-## Quick Start
+## 🚀 Quick Start
 
-### Prerequisites
+### 📋 Prerequisites
 
 - Docker and Docker Compose
 - For optimal performance on macOS/Windows: Multipass with Ubuntu
 
-### Running with Docker Compose
+### 🐳 Running with Docker Compose
 
 ```bash
 # Clone the repository
@@ -40,14 +40,14 @@ docker compose up -d
 docker compose logs -f syslog-ng
 ```
 
-### Running with Multipass (Recommended for macOS/Windows)
+### 🖥️ Running with Multipass (Recommended for macOS/Windows)
 
 ```bash
 # Start with proper host networking
 multipass docker compose -- -f docker-compose.yml up
 ```
 
-## Configuration Structure
+## 📁 Configuration Structure
 
 ```
 syslog-ng/
@@ -60,7 +60,7 @@ syslog-ng/
         └── 20-siteB.conf    # Site B configuration
 ```
 
-### Adding New Sites
+### ➕ Adding New Sites
 
 1. Create a new configuration file in `syslog-ng/conf.d/locations/`
 2. Follow the naming convention: `[priority]-[sitename].conf`
@@ -85,9 +85,9 @@ log {
 };
 ```
 
-## Testing
+## 🧪 Testing
 
-### Send Test Messages
+### 📤 Send Test Messages
 
 Use the included Python script to send test syslog messages:
 
@@ -100,7 +100,7 @@ python3 send_syslog.py localhost 5514  # Site A
 python3 send_syslog.py localhost 5515  # Site B
 ```
 
-### Verify Configuration
+### ✅ Verify Configuration
 
 ```bash
 # Check syslog-ng syntax
@@ -113,14 +113,14 @@ docker exec syslogng syslog-ng-ctl --control=/run/syslog-ng.ctl query get versio
 tail -f logs/V.log
 ```
 
-## Configuration Reloading
+## 🔄 Configuration Reloading
 
 The system supports two methods for detecting configuration changes:
 
 1. **Inotify (Primary)**: Real-time file system event monitoring
 2. **Polling (Fallback)**: Periodic hash-based change detection
 
-### Tunable Parameters
+### ⚙️ Tunable Parameters
 
 Environment variables in `docker-compose.yml`:
 
@@ -129,16 +129,16 @@ Environment variables in `docker-compose.yml`:
 - `POLL_INTERVAL_SEC`: Polling interval (default: 5s)
 - `INOTIFY_EVENTS`: inotify events to monitor
 
-## Monitoring and Troubleshooting
+## 📊 Monitoring and Troubleshooting
 
-### Health Checks
+### 💚 Health Checks
 
 The container includes built-in health checks:
 ```bash
 docker compose ps  # View service health status
 ```
 
-### Log Monitoring
+### 📋 Log Monitoring
 
 ```bash
 # View container logs
@@ -151,16 +151,16 @@ tail -f logs/*.log
 docker compose logs syslog-ng | grep reloader
 ```
 
-### Common Issues
+### ⚠️ Common Issues
 
 1. **Permission Issues**: Ensure log directory is writable
 2. **Port Conflicts**: Check if ports 5514/5515 are available
 3. **Configuration Errors**: Check syntax before applying changes
 4. **Network Issues**: Verify host networking mode for proper binding
 
-## Development
+## 🛠️ Development
 
-### Project Structure
+### 📂 Project Structure
 
 ```
 .
@@ -173,7 +173,7 @@ docker compose logs syslog-ng | grep reloader
 └── logs/                   # Log output directory
 ```
 
-### Building Custom Images
+### 🏗️ Building Custom Images
 
 ```bash
 # Build the syslog-ng image
@@ -186,7 +186,7 @@ services:
     # ... rest of configuration
 ```
 
-## Contributing
+## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/new-feature`
@@ -194,37 +194,46 @@ services:
 4. Commit with descriptive messages
 5. Push and create a Pull Request
 
-### Development Guidelines
+### 📝 Development Guidelines
 
 - Follow the modular configuration structure
 - Test configuration changes before committing
 - Update documentation for new features
 - Ensure backward compatibility
 
-## License
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Cloud-based Syslog Management
+## ☁️ Cloud-based Syslog Management
 
-For enterprise-grade cloud-based syslog management, we recommend [LogCentral](https://logcentral.io/). LogCentral provides:
+For enterprise-grade cloud-based syslog management, we recommend [LogCentral](https://go.gonzague.me/logcentral). LogCentral provides:
 
-- Centralized log management and analysis
-- Real-time monitoring and alerting
-- Scalable cloud infrastructure
-- Advanced search and filtering capabilities
-- Integration with popular monitoring tools
+- 📊 Centralized log management and analysis
+- 🚨 Real-time monitoring and alerting
+- 📈 Scalable cloud infrastructure
+- 🔍 Advanced search and filtering capabilities
+- 🔗 Integration with popular monitoring tools
 
 LogCentral complements this self-hosted syslog-ng setup by providing cloud-based analytics and long-term storage for your log data.
 
-## Support
+## 💬 Support
 
 - **Issues**: Report bugs and request features via GitHub Issues
 - **Documentation**: Check the wiki for detailed configuration examples
 - **Community**: Join discussions in GitHub Discussions
 
-## Acknowledgments
+## 🙏 Acknowledgments
 
 - Built on the excellent [syslog-ng](https://github.com/syslog-ng/syslog-ng) project
 - Uses the official [balabit/syslog-ng](https://hub.docker.com/r/balabit/syslog-ng/) Docker image
 - Inspired by modern DevOps practices for log management
+
+## 👨‍💻 Author & Resources
+
+**Created by Gonzague** - Passionate about log management and cloud infrastructure
+
+- 🏢 **Host your infrastructure on Hetzner**: [https://go.gonzague.me/hetzner](https://go.gonzague.me/hetzner)
+- ☁️ **I founded LogCentral, a syslog cloud platform**: [https://go.gonzague.me/logcentral](https://go.gonzague.me/logcentral)
+- 🔗 **Find my other projects & social networks**: [https://go.gonzague.me/bento](https://go.gonzague.me/bento)
+- 💻 **Coded with the help of Cursor**: [https://go.gonzague.me/cursor](https://go.gonzague.me/cursor)
