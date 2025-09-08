@@ -30,7 +30,7 @@ The system consists of:
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/LogCentral-io/syslogng-dynamic
 cd syslogng-dynamic
 
 # Start the services
@@ -100,18 +100,6 @@ python3 send_syslog.py localhost 5514  # Site A
 python3 send_syslog.py localhost 5515  # Site B
 ```
 
-### ✅ Verify Configuration
-
-```bash
-# Check syslog-ng syntax
-docker exec syslogng syslog-ng --syntax-only -f /etc/syslog-ng/syslog-ng.conf
-
-# Check service status
-docker exec syslogng syslog-ng-ctl --control=/run/syslog-ng.ctl query get version
-
-# View real-time logs
-tail -f logs/V.log
-```
 
 ## 🔄 Configuration Reloading
 
@@ -173,18 +161,6 @@ docker compose logs syslog-ng | grep reloader
 └── logs/                   # Log output directory
 ```
 
-### 🏗️ Building Custom Images
-
-```bash
-# Build the syslog-ng image
-docker build -t custom-syslogng ./syslogng-reloader
-
-# Use in docker-compose.yml
-services:
-  syslog-ng:
-    image: custom-syslogng
-    # ... rest of configuration
-```
 
 ## 🤝 Contributing
 
