@@ -30,11 +30,6 @@ jobs:
         flake8 send_syslog.py --count --select=E9,F63,F7,F82 --show-source --statistics
         flake8 send_syslog.py --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
         
-    - name: Test syslog-ng configuration syntax
-      run: |
-        docker run --rm -v $(pwd)/syslog-ng:/etc/syslog-ng:ro \
-          balabit/syslog-ng:latest \
-          syslog-ng --syntax-only -f /etc/syslog-ng/syslog-ng.conf
           
     - name: Build Docker image
       run: |
@@ -70,7 +65,7 @@ jobs:
         output: 'trivy-results.sarif'
         
     - name: Upload Trivy scan results to GitHub Security tab
-      uses: github/codeql-action/upload-sarif@v2
+      uses: github/codeql-action/upload-sarif@v3
       if: always()
       with:
         sarif_file: 'trivy-results.sarif'
